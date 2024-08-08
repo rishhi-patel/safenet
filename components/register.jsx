@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
-export function Login() {
+export function Register() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const router = useRouter()
@@ -18,14 +18,13 @@ export function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const { data } = await axios.post("/api/login", { email, password })
-      localStorage.setItem("loggedIn", "true")
-      localStorage.setItem("userId", data.user.id)
-      router.push("/")
+      await axios.post("/api/register", { email, password })
+      router.push("/login")
     } catch (error) {
-      alert("Login failed. Please check your credentials and try again.")
+      alert("Registration failed. Please try again.")
     }
   }
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <main className="flex-1 px-4 py-6">
@@ -33,9 +32,9 @@ export function Login() {
           <Card className="bg-card p-6">
             <div className="space-y-4">
               <div className="text-center">
-                <h1 className="text-2xl font-bold">Welcome back!</h1>
+                <h1 className="text-2xl font-bold">Welcome!</h1>
                 <p className="text-muted-foreground">
-                  Sign in to your account to continue.
+                  Enter details to continue.
                 </p>
               </div>
               <form className="space-y-2" onSubmit={handleSubmit}>
@@ -77,9 +76,9 @@ export function Login() {
                 </Button>
               </form>
               <div className="text-center text-sm text-muted-foreground">
-                Don't have an account?{" "}
-                <Link href="/register" className="underline" prefetch={false}>
-                  Sign up
+                Already have an account?{" "}
+                <Link href="/login" className="underline" prefetch={false}>
+                  Login
                 </Link>
               </div>
             </div>

@@ -4,10 +4,6 @@ export default function HomeMain() {
   return (
     <>
       <Home />
-      <form onSubmit={handlePostSubmit}>
-        <textarea />
-        <button type="submit">Post</button>
-      </form>
     </>
   )
 }
