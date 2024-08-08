@@ -136,39 +136,6 @@ export function Home() {
               </Card>
             </div>
           ))}
-
-          {/* <Card className="bg-card p-4">
-            <div className="flex items-start gap-4">
-              <Avatar className="w-10 h-10 shrink-0">
-                <AvatarImage src="/placeholder-user.jpg" alt="User Avatar" />
-                <AvatarFallback>AC</AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <div className="font-medium">Acme Inc</div>
-                  <div className="text-xs text-muted-foreground">1d</div>
-                </div>
-                <p className="mt-2">
-                  Excited to announce our new product launch! Check it out and
-                  let us know what you think.
-                </p>
-                <div className="mt-2 flex items-center gap-4">
-                  <Button variant="ghost" size="icon">
-                    <HeartIcon className="w-5 h-5" />
-                    <span className="sr-only">Like</span>
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <MessageCircleIcon className="w-5 h-5" />
-                    <span className="sr-only">Comment</span>
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <ShareIcon className="w-5 h-5" />
-                    <span className="sr-only">Share</span>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Card> */}
         </div>
       </main>
     </div>
