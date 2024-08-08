@@ -47,7 +47,15 @@ export function Home() {
     }
   }
 
-  console.log(posts)
+  function formatDate(isoString) {
+    const date = new Date(isoString)
+
+    const day = String(date.getDate()).padStart(2, "0")
+    const month = String(date.getMonth() + 1).padStart(2, "0") // Months are zero-based in JS
+    const year = String(date.getFullYear()).slice(-2) // Get last two digits of the year
+
+    return `${day}/${month}/${year}`
+  }
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <header className="flex items-center justify-between px-4 py-3 bg-card shadow">
@@ -103,8 +111,10 @@ export function Home() {
                   </Avatar>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <div className="font-medium">Acme Inc</div>
-                      <div className="text-xs text-muted-foreground">2h</div>
+                      <div className="font-medium">{post?.User.email}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {formatDate(post?.createdAt)}
+                      </div>
                     </div>
                     {post.content}
                     <div className="mt-2 flex items-center gap-4">

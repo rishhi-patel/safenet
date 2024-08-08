@@ -1,23 +1,23 @@
-import { DataTypes } from "sequelize"
-import sequelize from "../utils/db"
-import User from "./user"
-
-const Post = sequelize.define("Post", {
-  content: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  userId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: "Users",
-      key: "id",
+// models/post.js
+export default (sequelize, DataTypes) => {
+  const Post = sequelize.define("Post", {
+    content: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-  },
-})
+    userId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+      allowNull: false,
+    },
+  })
 
-Post.associate = (models) => {
-  Post.belongsTo(models.User, { foreignKey: "userId" })
+  Post.associate = (models) => {
+    Post.belongsTo(models.User, { foreignKey: "userId" })
+  }
+
+  return Post
 }
-
-export default Post

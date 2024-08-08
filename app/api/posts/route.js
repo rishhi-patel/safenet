@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server"
-import Post from "../../../models/post"
+import db from "../../../models"
 
+const { Post, User } = db
 export async function GET() {
-  const posts = await Post.findAll()
+  const posts = await Post.findAll({
+    include: {
+      model: User, // Ensure this is the correct model name
+      attributes: ["id", "email"], // Specify user attributes to include
+    },
+  })
   return NextResponse.json(posts)
 }
 
