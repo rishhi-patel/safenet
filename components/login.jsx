@@ -19,8 +19,8 @@ export function Login() {
     e.preventDefault()
     try {
       const { data } = await axios.post("/api/login", { email, password })
-      localStorage.setItem("loggedIn", "true")
-      localStorage.setItem("userId", data.user.id)
+      localStorage.setItem("token", data.token)
+
       router.push("/")
     } catch (error) {
       alert("Login failed. Please check your credentials and try again.")

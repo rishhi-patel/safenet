@@ -11,23 +11,34 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 
 export function Home() {
+  const token = localStorage.getItem("token")
   const router = useRouter()
   const [posts, setPosts] = useState([])
   const [newPost, setNewPost] = useState("")
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const { data } = await axios.get("/api/posts")
+  const fetchPosts = async () => {
+    try {
+      const { data } = await axios.get("/api/posts", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       setPosts(data)
+    } catch (error) {
+      if (error?.response && error.response.status === 401) {
+        router.push("/login")
+      }
+      console.error("Failed to fetch posts", error)
     }
-    fetchPosts()
-  }, [])
+  }
 
   useEffect(() => {
-    const loggedIn = localStorage.getItem("loggedIn")
-    if (!loggedIn) {
+    if (!token) {
       router.push("/login")
+      return
     }
+
+    fetchPosts()
   }, [router])
 
   const handlePostSubmit = async (e) => {
@@ -35,12 +46,16 @@ export function Home() {
     if (!newPost.trim()) return
 
     try {
-      const userId = localStorage.getItem("userId")
-      const { data } = await axios.post("/api/posts", {
-        content: newPost,
-        userId,
-      })
-      setPosts([data, ...posts])
+      const { data } = await axios.post(
+        "/api/posts",
+        { content: newPost },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      fetchPosts()
       setNewPost("")
     } catch (error) {
       console.error("Failed to post", error)
@@ -51,8 +66,8 @@ export function Home() {
     const date = new Date(isoString)
 
     const day = String(date.getDate()).padStart(2, "0")
-    const month = String(date.getMonth() + 1).padStart(2, "0") // Months are zero-based in JS
-    const year = String(date.getFullYear()).slice(-2) // Get last two digits of the year
+    const month = String(date.getMonth() + 1).padStart(2, "0")
+    const year = String(date.getFullYear()).slice(-4)
 
     return `${day}/${month}/${year}`
   }
@@ -60,7 +75,6 @@ export function Home() {
     <div className="flex flex-col min-h-screen bg-background">
       <header className="flex items-center justify-between px-4 py-3 bg-card shadow">
         <Link href="#" className="flex items-center gap-2" prefetch={false}>
-          <MountainIcon className="w-6 h-6" />
           <span className="text-lg font-semibold">SafeNet</span>
         </Link>
         <form>

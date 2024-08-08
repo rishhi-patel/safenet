@@ -1,29 +1,38 @@
 import { NextResponse } from "next/server"
-import { Sequelize } from "sequelize"
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 import db from "../../../models"
+
+const SECRET_KEY = process.env.JWT_SECRET || "your_secret_key"
 
 export async function POST(request) {
   const { email, password } = await request.json()
 
-  // Intentionally vulnerable to SQL injection
-  const query = `SELECT * FROM Users WHERE email = '${email}' AND password = '${password}'`
   try {
-    const user = await db.sequelize.query(query, {
-      type: Sequelize.QueryTypes.SELECT,
-    })
+    const user = await db.User.findOne({ where: { email } })
 
-    if (user.length === 0) {
+    if (!user) {
       return NextResponse.json(
         { error: "Invalid credentials" },
         { status: 401 }
       )
     }
 
-    // Simulate setting session
-    return NextResponse.json(
-      { message: "Logged in successfully", user: user[0] },
-      { status: 200 }
-    )
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    if (!isMatch) {
+      return NextResponse.json(
+        { error: "Invalid credentials" },
+        { status: 401 }
+      )
+    }
+
+    // Issue JWT
+    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, {
+      expiresIn: "1h",
+    })
+
+    return NextResponse.json({ token, user }, { status: 200 })
   } catch (error) {
     return NextResponse.json({ error: "Failed to log in" }, { status: 500 })
   }

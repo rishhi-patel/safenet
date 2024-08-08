@@ -18,8 +18,9 @@ export function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      await axios.post("/api/register", { email, password })
-      router.push("/login")
+      const { data } = await axios.post("/api/register", { email, password })
+      localStorage.setItem("token", data.token)
+      router.push("/")
     } catch (error) {
       alert("Registration failed. Please try again.")
     }

@@ -1,19 +1,41 @@
 import { NextResponse } from "next/server"
 import db from "../../../models"
+import { authenticateToken } from "../../../utils/auth"
 
-const { Post, User } = db
-export async function GET() {
-  const posts = await Post.findAll({
+export async function GET(request) {
+  const authResult = authenticateToken(request)
+
+  if (!authResult.valid) {
+    return NextResponse.json({ error: authResult.error }, { status: 401 })
+  }
+  const posts = await db.Post.findAll({
     include: {
-      model: User, // Ensure this is the correct model name
-      attributes: ["id", "email"], // Specify user attributes to include
+      model: db.User,
+      attributes: ["id", "email"],
     },
   })
   return NextResponse.json(posts)
 }
 
 export async function POST(request) {
-  const { content, userId } = await request.json()
-  const newPost = await Post.create({ content, userId })
-  return NextResponse.json(newPost)
+  const authResult = authenticateToken(request)
+
+  if (!authResult.valid) {
+    return NextResponse.json({ error: authResult.error }, { status: 401 })
+  }
+
+  const { content } = await request.json()
+
+  try {
+    const newPost = await db.Post.create({
+      content,
+      userId: authResult.user.id,
+    })
+    return NextResponse.json(newPost, { status: 201 })
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to create post" },
+      { status: 500 }
+    )
+  }
 }
