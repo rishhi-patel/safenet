@@ -3,6 +3,7 @@ import db from "../../../models"
 import { authenticateToken } from "../../../utils/auth"
 
 export async function GET(request) {
+  //jwt token verification for authorization
   const authResult = authenticateToken(request)
 
   if (!authResult.valid) {
@@ -18,6 +19,7 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  //jwt token verification for authorization
   const authResult = authenticateToken(request)
 
   if (!authResult.valid) {

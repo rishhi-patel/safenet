@@ -17,7 +17,7 @@ export async function POST(request) {
         { status: 401 }
       )
     }
-
+    //check and verify pasword hash
     const isMatch = await bcrypt.compare(password, user.password)
 
     if (!isMatch) {
