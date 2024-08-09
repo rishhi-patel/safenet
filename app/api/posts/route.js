@@ -5,8 +5,8 @@ const { Post, User } = db
 export async function GET() {
   const posts = await Post.findAll({
     include: {
-      model: User, // Ensure this is the correct model name
-      attributes: ["id", "email"], // Specify user attributes to include
+      model: User,
+      attributes: ["id", "email"],
     },
   })
   return NextResponse.json(posts)
