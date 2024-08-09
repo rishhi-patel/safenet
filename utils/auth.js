@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken"
 const SECRET_KEY = process.env.JWT_SECRET || "your_secret_key"
 
 export function authenticateToken(request) {
+  //checking token from header  for securing routes
   const authHeader = request.headers.get("authorization")
   const token = authHeader && authHeader.split(" ")[1]
 
