@@ -15,11 +15,12 @@ export function Home() {
   const [posts, setPosts] = useState([])
   const [newPost, setNewPost] = useState("")
 
+  const fetchPosts = async () => {
+    const { data } = await axios.get("/api/posts")
+    setPosts(data)
+  }
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      const { data } = await axios.get("/api/posts")
-      setPosts(data)
-    }
     fetchPosts()
   }, [])
 
@@ -40,8 +41,8 @@ export function Home() {
         content: newPost,
         userId,
       })
-      setPosts([data, ...posts])
       setNewPost("")
+      fetchPosts()
     } catch (error) {
       console.error("Failed to post", error)
     }
@@ -116,7 +117,10 @@ export function Home() {
                         {formatDate(post?.createdAt)}
                       </div>
                     </div>
-                    {post.content}
+                    <div
+                      dangerouslySetInnerHTML={{ __html: post.content }}
+                    ></div>
+
                     <div className="mt-2 flex items-center gap-4">
                       <Button variant="ghost" size="icon">
                         <HeartIcon className="w-5 h-5" />
