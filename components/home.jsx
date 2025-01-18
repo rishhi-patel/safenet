@@ -16,6 +16,10 @@ export function Home() {
   const [posts, setPosts] = useState([])
   const [newPost, setNewPost] = useState("")
 
+  if (typeof window !== "undefined") {
+    localStorage.setItem("token", token)
+  }
+
   const fetchPosts = async () => {
     try {
       const { data } = await axios.get("/api/posts", {
